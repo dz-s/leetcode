@@ -1,6 +1,5 @@
 package main
 	
-import "fmt"
 import "sort"
 
 func findIndex(a []int, x int, next bool) int {
@@ -42,10 +41,4 @@ func twoSum(nums []int, target int) []int {
 		}
 	}
     return res;
-}
-
-func main () {
-	nums := []int{3,3}
-	target := 6
-	fmt.Println(twoSum(nums, target))
 }
