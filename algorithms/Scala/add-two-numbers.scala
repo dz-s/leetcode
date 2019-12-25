@@ -37,8 +37,8 @@ object Solution {
       currVal = _l1._x + _l2._x + rest
 
       if (currVal >= 10) {
-        rest = currVal % 10 + 1
-        currVal = 0
+        rest = currVal / 10
+        currVal = currVal % 10
       } else {
         rest = 0
       }
@@ -68,7 +68,7 @@ object Solution {
 
   def main(args: Array[String]): Unit = {
     var l1 = new ListNode(2);
-    l1.next = new ListNode(5)
+    l1.next = new ListNode(6)
     l1.next.next = new ListNode(3)
     var l2 = new ListNode(5);
     l2.next = new ListNode(6)
