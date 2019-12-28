@@ -1,5 +1,7 @@
 *.iml
 *.ipr
 *.iws
+*.db
+*.log
 project
 target

@@ -21,14 +21,15 @@ class ListNode(var _x: Int = 0) {
 }
 
 object Solution {
-  var resultList     = new ListNode()
-  var link: ListNode = null
-  var _l1: ListNode  = null
-  var _l2: ListNode  = null
-  var rest: Int      = 0
-  var currVal: Int   = 0;
-  var step           = 0;
+
   def addTwoNumbers(l1: ListNode, l2: ListNode): ListNode = {
+    var resultList     = new ListNode()
+    var link: ListNode = null
+    var _l1: ListNode  = null
+    var _l2: ListNode  = null
+    var rest: Int      = 0
+    var currVal: Int   = 0;
+    var step           = 0;
 
     _l1 = l1
     _l2 = l2
@@ -66,14 +67,14 @@ object Solution {
 
   }
 
-  def main(args: Array[String]): Unit = {
-    var l1 = new ListNode(2);
-    l1.next = new ListNode(6)
-    l1.next.next = new ListNode(3)
-    var l2 = new ListNode(5);
-    l2.next = new ListNode(6)
-    l2.next.next = new ListNode(4)
-    var res: ListNode = addTwoNumbers(l1, l2)
-    println(res)
-  }
+  // def main(args: Array[String]): Unit = {
+  //   var l1 = new ListNode(2);
+  //   l1.next = new ListNode(6)
+  //   l1.next.next = new ListNode(3)
+  //   var l2 = new ListNode(5);
+  //   l2.next = new ListNode(6)
+  //   l2.next.next = new ListNode(4)
+  //   var res: ListNode = addTwoNumbers(l1, l2)
+  //   println(res)
+  // }
 }
