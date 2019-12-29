@@ -1,3 +1,6 @@
+import scala.collection.mutable.Stack
+import scala.util.control.Breaks._
+
 object Solution2 extends App {
 
   def repeat(times: Int, el: Int): List[Int] = {
@@ -38,13 +41,42 @@ object Solution2 extends App {
     return f(x)
   }
 
-  override def main(args: Array[String]): Unit = {
-    val arr = List(3, 2, 4, 6, 5, 7, 8, 0, 1)
+  def validBST(): Array[Boolean] = {
+    var s     = Stack[Int]()
+    var root  = Int.MinValue
+    val count = scala.io.StdIn.readLine().toInt
+    var res   = Array[Boolean]()
+    for (i <- 1 to count) {
+      var size  = scala.io.StdIn.readLine().toInt
+      var nodes = scala.io.StdIn.readLine().trim.split("\\s+").map(_.toInt)
+      breakable {
+        for (i <- nodes) {
+          if (i < root) {
+            res = res :+ false
+            break
+          } else {
+            while (!s.isEmpty && s.top < i) {
+              root = s.top
+              s.pop()
+            }
+            s.push(i);
+          }
+        }
+      }
+      if (res.length < i) {
+        res = res :+ true
+      }
+      s.clear()
+      root = Int.MinValue
+    }
+    return res
+  }
 
-    println(sumOfOddElems(arr))
+  override def main(args: Array[String]): Unit = {
+    var res = validBST()
+    for (i <- res) {
+      println(if (i) "YES" else "NO")
+    }
   }
 
 }
-
-// var n = scala.io.StdIn.readInt
-// f(n)
