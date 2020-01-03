@@ -227,7 +227,7 @@ object Solution2 extends App {
     if (n == 2) {
       return 2
     }
-    var store = Array.ofDim[Int](n+1)
+    var store = Array.ofDim[Int](n + 1)
     store(0) = 1
     store(1) = 1
 
@@ -242,12 +242,127 @@ object Solution2 extends App {
     return store(n)
   }
 
+  def uniquePaths(m: Int, n: Int): Int = {
+
+    def uniquePathsRecurr(m_i: Int, n_i: Int, m: Int, n: Int): Int = {
+
+      if (m_i < m && n_i < n) {
+        return uniquePathsRecurr(m_i + 1, n_i, m, n) + uniquePathsRecurr(m_i, n_i + 1, m, n)
+      } else if (m_i == m && n_i < n) {
+        return uniquePathsRecurr(m_i, n_i + 1, m, n)
+      } else if (n_i == n && m_i < m) {
+        return uniquePathsRecurr(m_i + 1, n_i, m, n)
+      } else if (m_i == m && n_i == n) {
+        return 1
+      }
+
+      return 0
+    }
+
+    if (m == 1 && n == 1) {
+      return 1
+    }
+
+    var count = 0;
+
+    count = uniquePathsRecurr(2, 1, m, n) + uniquePathsRecurr(1, 2, m, n)
+
+    return count
+  }
+  def uniquePathsMemo(m: Int, n: Int): Int = {
+
+    var OPT = Array.ofDim[Int](m, n)
+    if (m == 1 && n == 1) {
+      return 1
+    }
+    OPT(0)(0) = 0;
+
+    for (i <- 1 to m - 1) {
+      OPT(i)(0) = OPT(i)(0) + 1
+    }
+
+    for (j <- 1 to n - 1) {
+      OPT(0)(j) = OPT(0)(j) + 1
+    }
+    for (i <- 1 to m - 1) {
+      for (j <- 1 to n - 1) {
+        OPT(i)(j) = OPT(i - 1)(j) + OPT(i)(j - 1)
+      }
+    }
+
+    return OPT(m - 1)(n - 1)
+  }
+
+  def minSteps(n: Int): Int = {
+//https://leetcode.com/problems/2-keys-keyboard/
+
+    // var OPT = Array.ofDim[Int](n, n)
+    // if (m == 1 && n == 1) {
+    //   return 1
+    // }
+    // OPT(0)(0) = 0;
+
+    // for (i <- 1 to m - 1) {
+    //   OPT(i)(0) = OPT(i)(0) + 1
+    // }
+
+    // for (j <- 1 to n - 1) {
+    //   OPT(0)(j) = OPT(0)(j) + 1
+    // }
+    // for (i <- 1 to m - 1) {
+    //   for (j <- 1 to n - 1) {
+    //     OPT(i)(j) = OPT(i - 1)(j) + OPT(i)(j - 1)
+    //   }
+    // }
+
+    // return OPT(m - 1)(n - 1)
+    // return best(n);
+    return 1
+
+  }
+
+  def countSubstrings(s: String): Int = {
+
+    val n = s.length
+
+    if (n == 0) {
+      return 0;
+    }
+    if (n == 1) {
+      return 1;
+    }
+
+    var OPT   = Array.ofDim[Boolean](n, n)
+    var count = 0
+
+    for (i <- 0 to n - 1) { 
+      for (j <- 0 to n - 1) {
+        OPT(i)(j) = false
+      }
+    }
+
+    for (i <- 0 to n - 1) {
+      for (j <- i to 0 by -1) {
+        if (s(i) == s(j) && (i - j < 2|| OPT(i - 1)(j + 1))) {
+          OPT(i)(j) = true
+          count = count + 1
+        }
+      }
+    }
+
+    return count
+
+  }
+
   override def main(args: Array[String]): Unit = {
     // val cost                    = Array[Int](1, 100, 1, 1, 1, 100, 1, 1, 100, 1)
     // val cost1                   = Array[Int](10, 15, 20)
     // val grid: Array[Array[Int]] = Array(Array(1, 3, 1), Array(1, 5, 1), Array(4, 2, 1))
-    println(numTreesMemo(1))
-    println(numTreesMemo(19))
+    println(countSubstrings("abc"))
+    println(countSubstrings("aba"))
+    println(countSubstrings("aaa"))
+    // println(uniquePathsMemo(7, 3))
+    // println(uniquePathsMemo(9, 51))
   }
 
 }
