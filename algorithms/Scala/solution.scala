@@ -1,8 +1,35 @@
 import scala.collection.mutable.Stack
 import scala.util.control.Breaks._
+import scala.math.pow
 import scala.math.min
 import scala.math.max
 object Solution2 extends App {
+
+  //Arrays
+
+  //Given an array nums of integers, return how many of them contain an even number of digits.
+  def findNumbers(nums: Array[Int]): Int = {
+    var count    = 0
+    var n        = nums.length
+    var min_val  = 0
+    var curr_val = 0
+    var divider  = Array[Int](10, 100, 1000, 10000, 100000)
+    for (i <- 0 to n - 1) {
+      min_val = Int.MaxValue
+      for (j <- 0 to 4) {
+        curr_val = nums(i) / divider(j)
+        if (curr_val > 0 && curr_val < 10)
+          min_val = j
+      }
+      if (min_val == 0 || min_val == 2 || min_val == 4) {
+        count = count + 1
+      }
+    }
+    return count
+
+  }
+
+  //DP
 
   def repeat(times: Int, el: Int): List[Int] = {
     var res = List[Int]()
@@ -335,7 +362,7 @@ object Solution2 extends App {
     var OPT   = Array.ofDim[Boolean](n, n)
     var count = 0
 
-    for (i <- 0 to n - 1) { 
+    for (i <- 0 to n - 1) {
       for (j <- 0 to n - 1) {
         OPT(i)(j) = false
       }
@@ -343,7 +370,7 @@ object Solution2 extends App {
 
     for (i <- 0 to n - 1) {
       for (j <- i to 0 by -1) {
-        if (s(i) == s(j) && (i - j < 2|| OPT(i - 1)(j + 1))) {
+        if (s(i) == s(j) && (i - j < 2 || OPT(i - 1)(j + 1))) {
           OPT(i)(j) = true
           count = count + 1
         }
@@ -354,13 +381,119 @@ object Solution2 extends App {
 
   }
 
+  def longestCommonSubsequence(text1: String, text2: String): Int = {
+    val n = text1.length
+    val m = text2.length
+
+    var OPT = Array.ofDim[Int](n + 1, m + 1)
+
+    for (j <- 0 to m) {
+      OPT(0)(j) = 0
+    }
+    for (i <- 0 to n) {
+      OPT(i)(0) = 0
+    }
+
+    for (i <- 1 to n) {
+      for (j <- 1 to m) {
+        if (text1(i - 1) == text2(j - 1)) {
+          OPT(i)(j) = OPT(i - 1)(j - 1) + 1
+        } else {
+          OPT(i)(j) = max(OPT(i - 1)(j), OPT(i)(j - 1))
+        }
+      }
+    }
+
+    return OPT(n)(m)
+  }
+
+  def subsets(nums: Array[Int]): List[List[Int]] = {
+
+    var powerset = Vector[List[Int]]()
+    var subset   = Stack[Int]()
+
+    def backtrack(nums: Array[Int], start: Int): Unit = {
+      val n = nums.length
+      powerset = powerset :+ subset.toList
+      for (i <- start to n - 1) {
+        subset.push(nums(i))
+        backtrack(nums, i + 1)
+        subset.pop()
+      }
+    }
+    backtrack(nums, 0)
+    return powerset.toList
+  }
+
+  def subsetsWithDups(nums: Array[Int]): List[List[Int]] = {
+    var _nums = nums
+    scala.util.Sorting.quickSort(_nums)
+
+    var powerset = Vector[List[Int]]()
+    var subset   = Stack[Int]()
+
+    def backtrack(nums: Array[Int], start: Int): Unit = {
+      val n = nums.length
+      powerset = powerset :+ subset.toList
+      for (i <- start to n - 1) {
+        breakable {
+          if (i > start && nums(i) == nums(i - 1)) {
+
+            break
+          } else {
+            subset.push(nums(i))
+            backtrack(nums, i + 1)
+            subset.pop()
+          }
+        }
+
+      }
+    }
+    backtrack(_nums, 0)
+    return powerset.toList
+  }
+
+  def combinationSum(candidates: Array[Int], target: Int): List[List[Int]] = {
+    var _candidates = candidates
+    scala.util.Sorting.quickSort(_candidates)
+
+    var powerset = Vector[List[Int]]()
+    var subset   = Stack[Int]()
+    var n        = _candidates.length
+    var rest     = target
+    def backtrack(nums: Array[Int], start: Int, rest: Int): Unit = {
+      println(start, rest)
+      var _rest = rest
+      for (i <- start to 0 by -1) {
+        subset.push(nums(i))
+        _rest = rest - nums(i)
+        breakable {
+          if (_rest == 0) {
+            powerset = powerset :+ subset.toList
+            
+            _rest = rest
+          }
+          if (_rest < 0) {
+            backtrack(nums, i - 1, _rest)
+          }
+          if (_rest > 0) {
+            backtrack(nums, i, _rest)
+          }
+        }
+        subset.pop()
+      }
+    }
+    backtrack(_candidates, n - 1, rest)
+    return powerset.toList
+
+  }
+
   override def main(args: Array[String]): Unit = {
-    // val cost                    = Array[Int](1, 100, 1, 1, 1, 100, 1, 1, 100, 1)
+    val nums = Array[Int](2,3,5)
     // val cost1                   = Array[Int](10, 15, 20)
     // val grid: Array[Array[Int]] = Array(Array(1, 3, 1), Array(1, 5, 1), Array(4, 2, 1))
-    println(countSubstrings("abc"))
-    println(countSubstrings("aba"))
-    println(countSubstrings("aaa"))
+    println(combinationSum(nums, 8).map(_.mkString(" ")).mkString("\n"))
+
     // println(uniquePathsMemo(7, 3))
     // println(uniquePathsMemo(9, 51))
   }
