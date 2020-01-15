@@ -462,40 +462,48 @@ object Solution2 extends App {
     var n        = _candidates.length
     var rest     = target
     def backtrack(nums: Array[Int], start: Int, rest: Int): Unit = {
-      println(start, rest)
+
       var _rest = rest
-      for (i <- start to 0 by -1) {
-        subset.push(nums(i))
-        _rest = rest - nums(i)
-        breakable {
+      breakable {
+        for (i <- start to n - 1) {
+          _rest = rest - nums(i)
           if (_rest == 0) {
+            subset.push(nums(i))
             powerset = powerset :+ subset.toList
-            
-            _rest = rest
+            subset.pop()
+            break()
           }
           if (_rest < 0) {
-            backtrack(nums, i - 1, _rest)
+            
+            break()
           }
           if (_rest > 0) {
+            subset.push(nums(i))
+            
             backtrack(nums, i, _rest)
           }
         }
+      }
+      if (!subset.isEmpty) {
         subset.pop()
       }
+      
+
     }
-    backtrack(_candidates, n - 1, rest)
+    backtrack(_candidates, 0, rest)
     return powerset.toList
 
   }
 
   override def main(args: Array[String]): Unit = {
-    val nums = Array[Int](2,3,5)
+    val nums = Array[Int](30,34,25,24,29,38,36,42,45,44,31,28,26,37,23,20,47,40,49,46,39,43,33,41,27,32,35,48)
     // val cost1                   = Array[Int](10, 15, 20)
     // val grid: Array[Array[Int]] = Array(Array(1, 3, 1), Array(1, 5, 1), Array(4, 2, 1))
-    println(combinationSum(nums, 8).map(_.mkString(" ")).mkString("\n"))
+    println(combinationSum(nums, 54).map(_.mkString(" ")).mkString("\n"))
 
     // println(uniquePathsMemo(7, 3))
     // println(uniquePathsMemo(9, 51))
   }
 
 }
+
