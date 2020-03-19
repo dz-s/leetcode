@@ -4,48 +4,76 @@
  * @return {number[][]}
  */
 
- //TODO: Memoisation
+//TODO: Memoisation
 const threeSum = (nums) => {
 
-    let backtrack = []
-    let res = []
-    let sum = 0
+    let map = {}
+    const len = nums.length
+    let numsCopy = nums.sort((a, b) => a - b);
 
-    const isCounted = (backtrack) => {
-        const sorted = [...backtrack].sort()
-        let counted = false
-        res.forEach(track => {
-            if (counted) {
-                return counted
-            }
-            counted = JSON.stringify(track.sort()) === JSON.stringify(sorted)
-        })
-
-        return counted
+    if (len < 3) {
+        return []
     }
-    const recc = (begin, end) => {
-        
-        if (backtrack.length === 3) { 
-            sum = backtrack.reduce((a, b) => a + b, 0)
-            if (sum === 0) {
-                if (!isCounted(backtrack)) {
-                    res.push([].concat(backtrack))
-                }
+
+    const findKPair = (arr, K) => {
+        let counted = new Set()
+        const len = arr.length
+        if (len === 2) {
+            return arr[0] + arr[1] === K ? [[arr[0], arr[1]]] : []
+        }
+        let arrCopy = [].concat(arr)
+        let res = []
+        arrCopy.sort((a, b) => a - b);
+        let first = 0
+        let second = len - 1
+        let sum = Number.MIN_SAFE_INTEGER
+        while (first <= second - 1) {
+            sum = arrCopy[first] + arrCopy[second]
+            if (sum === K) {
+                if (!counted.has(arrCopy[first]) && !counted.has(arrCopy[second]))
+                    res.push([arrCopy[first], arrCopy[second]])
+                counted.add(arrCopy[first])
+                counted.add(arrCopy[second])
+                second--
             }
-        } else {
-            for (let i = begin; i < end; i++) {
-                backtrack.push(nums[i])
-                recc(i + 1, end)
-                backtrack.pop()
+            if (sum > K) {
+                second--
             }
+            if (sum < K) {
+                first++
+            }
+        }
+        return res
+    }
+
+    for (let i = 0; i < len; i++) {
+        const el = numsCopy[i]
+        if (!(el in map)) {
+            if (el <= 0) {
+                map[el] = findKPair(numsCopy.filter((el, idx) => idx > i), parseInt(-el))
+            }
+
         }
 
     }
+    let res = []
+    for (key in map) {
+        if (map[key].length > 0) {
+            map[key].forEach(rest => {
+                res.push([parseInt(key), ...rest])
+            });
 
-    recc(0, nums.length)
-
+        }
+    }
     return res
-
 };
 
-console.log(threeSum([5,-9,-11,9,9,-4,14,10,-11,1,-13,11,10,14,-3,-3,-4,6,-15,6,6,-13,7,-11,-15,10,-8,13,-14,-12,12,6,-6,8,0,10,-11,-8,-2,-6,8,0,12,3,-9,-6,8,3,-15,0,-6,-1,3,9,-5,-5,4,2,-15,-3,5,13,-11,7,6,-4,2,11,-5,7,12,-11,-15,1,-1,-9,10,-8,1,2,8,11,-14,-4,-3,-12,-2,8,5,-1,-9,-4,-3,-13,-12,-12,-10,-3,6,1,12,3,-3,12,11,11,10]))
+console.log(threeSum([-1, 0, 1, 2, -1, -4]))
+console.log(threeSum([-2, 0, 1, 1, 2]))
+console.log(threeSum(
+    [0, 0, 0]))
+console.log(threeSum(
+    [0, 0, 0, 0]))
+
+console.log(threeSum(
+    [-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6]))
