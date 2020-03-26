@@ -14,11 +14,11 @@ function ListNode(val) {
     this.val = val;
     this.next = null;
 }
-const swapPairs = (head) => {
+const reverseKGroup = (head, k) => {
     let headSwap = null
     let headSwapTmp = null
     let stack = []
-    let count = 2
+    let count = k
     let headTmp = head
 
     if (head) {
@@ -33,31 +33,35 @@ const swapPairs = (head) => {
                     headSwap = new ListNode(stack.pop())
                     headSwapTmp = headSwap
 
-                    headSwapTmp.next = new ListNode(stack.pop())
-                    headSwapTmp = headSwapTmp.next
+                    for (let i = 1; i < k; i++) {
+                        headSwapTmp.next = new ListNode(stack.pop())
+                        headSwapTmp = headSwapTmp.next
+                    }
+
                 } else {
-                    headSwapTmp.next = new ListNode(stack.pop())
-                    headSwapTmp = headSwapTmp.next
-                    headSwapTmp.next = new ListNode(stack.pop())
-                    headSwapTmp = headSwapTmp.next
+                    for (let i = 0; i < k; i++) {
+                        headSwapTmp.next = new ListNode(stack.pop())
+                        headSwapTmp = headSwapTmp.next
+                    }
+
                 }
 
 
                 stack.push(headTmp.val)
-                count = 1 // 2 - 1
+                count = k - 1 // 2 - 1
             }
 
             headTmp = headTmp.next
         }
+        const method = count === 0 ? 'pop' : 'shift'
 
-        //pop put the rest
         while (stack.length > 0) {
 
             if (headSwapTmp === null) {
-                headSwap = new ListNode(stack.pop())
+                headSwap = new ListNode(stack[method]())
                 headSwapTmp = headSwap
             } else {
-                headSwapTmp.next = new ListNode(stack.pop())
+                headSwapTmp.next = new ListNode(stack[method]())
                 headSwapTmp = headSwapTmp.next
             }
 
@@ -77,3 +81,5 @@ tmp = tmp.next
 tmp.next = new ListNode(4)
 tmp = tmp.next
 tmp.next = new ListNode(5)
+
+console.log(JSON.stringify(reverseKGroup(head, 3)))
