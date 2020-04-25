@@ -33,7 +33,7 @@ LRUCache.prototype.put = (key, value) => {
     } else {
         if (this.cache.size === this.capacity) {
             for ([k, v] of this.cache) {
-                delete this.cache[k]]
+                delete this.cache[k]
                 break;
             }
         }
