@@ -13,3 +13,6 @@ var removeKdigits = function(num, k) {
     for (let i = 0; i < k; i++) output.pop();
     return output.length > 0 ? output.join("") : "0"
 };
+
+
+console.log(removeKdigits('99123499', 4))
